@@ -9,6 +9,13 @@ if let index = CommandLine.arguments.firstIndex(of: "--export-iconset"),
     exit(ok ? 0 : 1)
 }
 
+// Art export: writes the README banners from the same sprite the app uses.
+if let index = CommandLine.arguments.firstIndex(of: "--export-banners"),
+   index + 1 < CommandLine.arguments.count {
+    let directory = CommandLine.arguments[index + 1]
+    exit(BannerRenderer.export(to: directory) ? 0 : 1)
+}
+
 // Headless self-checks, used to verify a build without watching the menu bar.
 if CommandLine.arguments.contains("--diagnose") {
     Diagnostics.run()

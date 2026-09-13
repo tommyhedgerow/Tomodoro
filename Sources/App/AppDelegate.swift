@@ -23,7 +23,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let actions = makeActions()
         self.actions = actions
-        statusController = StatusItemController(engine: engine, ui: ui, actions: actions)
+        statusController = StatusItemController(
+            engine: engine, ui: ui, actions: actions,
+            initiallyShowSettings: CommandLine.arguments.contains("--settings-open")
+        )
 
         let overlay = OverlayWindowController(engine: engine)
         overlay.onVisibilityChanged = { [weak self] visibility in
@@ -71,7 +74,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if CommandLine.arguments.contains("--popover-probe") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.statusController?.openPopoverForDiagnostics()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { exit(0) }
+                // Long enough for an external screen capture to catch it.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 14.0) { exit(0) }
             }
         }
 

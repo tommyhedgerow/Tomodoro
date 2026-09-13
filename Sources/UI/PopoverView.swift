@@ -31,9 +31,19 @@ struct PopoverView: View {
     @ObservedObject var ui: UIState
     let actions: AppActions
 
-    @State private var showSettings = false
+    @State private var showSettings: Bool
 
     private var phaseColor: Color { engine.phase.color }
+
+    /// - Parameter initiallyShowSettings: seeds the settings disclosure, so a
+    ///   screenshot build can capture the panel already expanded.
+    init(engine: PomodoroEngine, ui: UIState, actions: AppActions,
+         initiallyShowSettings: Bool = false) {
+        self.engine = engine
+        self.ui = ui
+        self.actions = actions
+        _showSettings = State(initialValue: initiallyShowSettings)
+    }
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {

@@ -1,3 +1,5 @@
+![Tomodoro](Screenshots/readme-header.png)
+
 # Tomodoro
 
 A macOS menu bar Pomodoro timer whose mascot is a 16x16 pixel-art tortoise. The
@@ -6,6 +8,8 @@ its shell in the same pixel grid as the art.
 
 Session state is shown by colour: **red** for focus, **green** for a short break,
 **blue** for a long break.
+
+![The tortoise floating on the desktop, with the countdown inside its shell](Screenshots/overlay.png)
 
 ## Features
 
@@ -24,6 +28,48 @@ Session state is shown by colour: **red** for focus, **green** for a short break
   from an incrementing counter. See below.
 - **Session-end alerts**: native notifications when the build is signed, plus a
   menu bar flash and an audible alert that always fire.
+
+## Installing it
+
+You do not need to know anything technical to use this. Tomodoro is a menu bar
+app: once it is running there is no window and no Dock icon, just a small
+tortoise at the top right of your screen next to the clock.
+
+![The tortoise and countdown in the menu bar](Screenshots/menu-bar.png)
+
+### Installing on this Mac
+
+1. Double-click **Install Tomodoro.command** in this folder. A Terminal window
+   opens and does the work.
+2. If macOS asks whether you are sure you want to open it, click **Open**.
+3. The tortoise appears in your menu bar. You can close the Terminal window.
+
+The installer puts Tomodoro in your own Applications folder. It needs no
+administrator password and changes nothing else on your Mac.
+
+### Making it start automatically
+
+1. Open **System Settings**, then **General**, then **Login Items**
+2. Under "Open at Login", click **+**
+3. Choose **Tomodoro** from your Applications folder
+
+### Uninstalling
+
+Quit Tomodoro from its menu (right-click the tortoise, then **Quit Tomodoro**),
+then drag **Tomodoro** out of your Applications folder.
+
+### Passing it on to someone else
+
+Send them **Tomodoro.app** (or the app together with the installer). The first
+time they open it, macOS will warn that it cannot check the app for malicious
+software. That is expected: the app is not signed with a paid Apple developer
+certificate. Tell them to:
+
+1. **Right-click** (or Control-click) **Tomodoro**
+2. Choose **Open**
+3. Click **Open** in the dialog that appears
+
+macOS remembers the choice, so after that it opens normally.
 
 ## Building
 
@@ -54,8 +100,8 @@ xcodebuild -project Tomodoro.xcodeproj -scheme Tomodoro \
   -derivedDataPath .build/DerivedData test
 ```
 
-50 tests cover the sprite, the rendering pipeline, the overlay geometry and the
-timer engine. Highlights:
+71 tests cover the sprite, the rendering pipeline, the banner layout, the overlay
+geometry and the timer engine. Highlights:
 
 - **Engine**: countdown accuracy from the wall clock, sleep/wake reconciliation,
   drift-free multi-session catch-up, the long-break cadence, auto-start, controls,
@@ -106,6 +152,14 @@ a capped log at `~/Library/Logs/Tomodoro/diagnostics.log`, and
 `--diag-file PATH` writes it somewhere else.
 
 ## Usage
+
+Left-click the tortoise in the menu bar to open the dropdown:
+
+![The menu bar dropdown, showing the countdown, cycle dots and controls](Screenshots/dropdown.png)
+
+Settings expand in place, and scroll if your screen is short:
+
+![The same dropdown with settings expanded](Screenshots/settings.png)
 
 | Action | How |
 | --- | --- |
@@ -178,6 +232,8 @@ Sources/
     PopoverView.swift          the menu bar dropdown
     Theme.swift                colours, formatting, shared views
 Tests/TomodoroTests/        XCTest suite
+Screenshots/                images used by this README
+Install Tomodoro.command    double-click installer for non-technical users
 Tools/                      optional art debugging helpers (Python, stdlib only)
 ```
 
@@ -200,8 +256,24 @@ on the countdown's phase label and progress fill. Setting **Tortoise: Phase tint
 in the app's settings instead colours the whole body by phase, which was the
 original behaviour.
 
-`Tools/pngview.py` and `Tools/imgascii.py` decode a PNG to ASCII and are handy
-for inspecting the art or an app icon without opening an image viewer.
+### The README banners
+
+The header and footer at the top and bottom of this page are drawn by the app
+itself, from the same sprite, palettes and pixel font, so they cannot drift from
+the artwork. Regenerate them after changing the art:
+
+`@sh
+Tomodoro.app/Contents/MacOS/Tomodoro --export-banners Screenshots
+`@
+
+The header uses the wordmark and a parade of four tortoises: the natural mascot
+plus one in each session colour. The footer is a frieze cycling the same four,
+with each phase named in its own colour. Sizes are chosen so the small text stays
+legible after GitHub scales the image down to fit the page.
+
+`Tools/pngview.py`, `Tools/imgascii.py` and `Tools/imgcrop.py` decode, render
+and crop PNGs from the command line, which is handy for inspecting art or
+screenshots without opening an image viewer.
 
 ## Notes
 
@@ -210,3 +282,5 @@ for inspecting the art or an app icon without opening an image viewer.
   from your work.
 - The timer keeps running while the dropdown is open, because the ticker is
   scheduled in the `.common` run loop mode.
+
+![Focus, short break, long break](Screenshots/readme-footer.png)

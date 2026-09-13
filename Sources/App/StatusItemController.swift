@@ -20,7 +20,8 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     private var flashTicksRemaining = 0
     private var flashOn = false
 
-    init(engine: PomodoroEngine, ui: UIState, actions: AppActions) {
+    init(engine: PomodoroEngine, ui: UIState, actions: AppActions,
+         initiallyShowSettings: Bool = false) {
         self.engine = engine
         self.ui = ui
         self.actions = actions
@@ -28,7 +29,8 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         super.init()
 
         let hosting = NSHostingController(
-            rootView: PopoverView(engine: engine, ui: ui, actions: actions)
+            rootView: PopoverView(engine: engine, ui: ui, actions: actions,
+                                  initiallyShowSettings: initiallyShowSettings)
         )
         popover.contentViewController = hosting
         popover.behavior = .transient
