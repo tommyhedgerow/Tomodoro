@@ -1,0 +1,18 @@
+// Code signing for Tomodoro.
+//
+// The default is ad-hoc, so the project builds and runs with no Apple ID
+// configured. It is also why native notifications do not appear: macOS refuses
+// notification authorization to apps that are only ad-hoc signed.
+//
+// To turn notifications on:
+//   1. Xcode > Settings > Accounts > add your Apple ID (a free account is enough)
+//   2. Comment out the two lines below and uncomment the two after them
+//   3. Put your Team ID in DEVELOPMENT_TEAM (Xcode shows it under
+//      Signing & Capabilities, or at developer.apple.com > Membership)
+//   4. Rebuild. The first launch will ask for notification permission.
+
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = -
+
+// CODE_SIGN_STYLE = Automatic
+// DEVELOPMENT_TEAM = YOUR_TEAM_ID

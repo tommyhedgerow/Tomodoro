@@ -1,0 +1,96 @@
+name: Tomodoro
+
+options:
+  bundleIdPrefix: com.tom
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ALWAYS_SEARCH_USER_PATHS: NO
+
+targets:
+  Tomodoro:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+    # Signing lives in an xcconfig so it can be switched to a real identity
+    # without editing the generated project or this spec.
+    configFiles:
+      Debug: Configs/Signing.xcconfig
+      Release: Configs/Signing.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tom.tomodoro
+        PRODUCT_NAME: Tomodoro
+        INFOPLIST_FILE: Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+        # The icon comes from the sprite at build time, not an asset catalog.
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        # The icon step shells out to the freshly built binary, so the script
+        # phase must not run inside Xcode's script sandbox.
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SWIFT_STRICT_CONCURRENCY: minimal
+        # Xcode 16+ splits Debug builds into a launcher plus a .debug.dylib.
+        # The launcher cannot be exec'd on its own, and the icon step needs to run
+        # the binary, so keep Debug builds as a single self-contained executable.
+        ENABLE_DEBUG_DYLIB: NO
+    postBuildScripts:
+      - name: Generate app icon from the sprite
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          # Script phases run before Xcode signs the bundle, and an unsigned
+          # Mach-O cannot execute at all on Apple Silicon (the kernel kills it).
+          # Sign the executable ad-hoc so it can run; Xcode re-signs the whole
+          # bundle afterwards.
+          BINARY="$TARGET_BUILD_DIR/$EXECUTABLE_PATH"
+          codesign --force --sign - "$BINARY"
+          ICONSET="$DERIVED_FILE_DIR/Tomodoro.iconset"
+          rm -rf "$ICONSET"
+          "$BINARY" --export-iconset "$ICONSET"
+
+          # The bundle's Resources directory does not exist yet at script time,
+          # and iconutil will not create it.
+          RESOURCES="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH"
+          mkdir -p "$RESOURCES"
+          iconutil -c icns "$ICONSET" -o "$RESOURCES/AppIcon.icns"
+
+  # Unit tests compile the core sources directly rather than hosting the app.
+  # The app is a menu bar accessory that runs a run loop, which makes it an
+  # awkward test host; recompiling a few small files keeps tests fast and isolated.
+  TomodoroTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Sources/Core
+      - path: Sources/App/TortoiseImage.swift
+      - path: Tests/TomodoroTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tom.tomodoro.tests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: minimal
+
+schemes:
+  Tomodoro:
+    build:
+      targets:
+        Tomodoro: all
+        TomodoroTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - TomodoroTests
+    archive:
+      config: Release
