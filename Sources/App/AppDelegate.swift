@@ -10,6 +10,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let notifications = NotificationManager()
     private let hotKeys = HotKeyManager()
 
+    /// Owns the tortoise's idle animation. Kept at app scope so the overlay can be
+    /// hidden and shown without the tortoise's state resetting.
+    private let animator = TortoiseAnimator()
+
     /// Retained so the diagnostic probe can drive the same actions the menus use.
     private var actions: AppActions?
     private var statusController: StatusItemController?
@@ -28,12 +32,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             initiallyShowSettings: CommandLine.arguments.contains("--settings-open")
         )
 
-        let overlay = OverlayWindowController(engine: engine)
+        let overlay = OverlayWindowController(engine: engine, animator: animator)
         overlay.onVisibilityChanged = { [weak self] visibility in
             self?.ui.overlayVisibility = visibility
         }
         overlayController = overlay
         ui.overlayVisibility = overlay.visibility
+        animator.update(from: engine)
 
         notifications.bootstrap()
         engine.onSessionsCompleted = { [weak self] completions in
@@ -86,6 +91,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func handleSessionEnd(completions: [CompletedSession], settings: PomodoroSettings) {
+        // A focus session that finished earns the dandelion. Break sessions do
+        // not: he earns a treat for the work, not for the rest.
+        if completions.contains(where: { $0.phase == .focus }) {
+            animator.update(from: engine)
+            animator.requestMunch()
+        } else {
+            animator.update(from: engine)
+        }
+
         var bannerPosted = false
         if settings.notificationsEnabled, notifications.isAuthorized {
             notifications.notify(completions: completions, playSound: settings.playSound)

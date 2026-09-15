@@ -16,6 +16,14 @@ if let index = CommandLine.arguments.firstIndex(of: "--export-banners"),
     exit(BannerRenderer.export(to: directory) ? 0 : 1)
 }
 
+// Art export: a contact sheet of every animation frame, drawn from the same pose
+// data and palettes the overlay uses.
+if let index = CommandLine.arguments.firstIndex(of: "--export-animation"),
+   index + 1 < CommandLine.arguments.count {
+    let directory = CommandLine.arguments[index + 1]
+    exit(AnimationSheetRenderer.export(to: directory) ? 0 : 1)
+}
+
 // Headless self-checks, used to verify a build without watching the menu bar.
 if CommandLine.arguments.contains("--diagnose") {
     Diagnostics.run()

@@ -74,6 +74,7 @@ targets:
       - path: Sources/Core
       - path: Sources/App/TortoiseImage.swift
       - path: Sources/App/BannerRenderer.swift
+      - path: Sources/App/AnimationSheetRenderer.swift
       - path: Tests/TomodoroTests
     settings:
       base:

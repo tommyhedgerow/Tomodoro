@@ -40,6 +40,9 @@ final class OverlayInteractionView: NSView {
 
     var onClick: (() -> Void)?
     var onRightClick: ((NSEvent) -> Void)?
+    /// The scene currently on screen, so hit testing matches exactly what is
+    /// drawn: the tortoise's pose plus any prop in front of him.
+    var hitTestScene: (() -> TortoiseScene?)?
 
     private var mouseDownAt: NSPoint?
     private var didDrag = false
@@ -56,7 +59,7 @@ final class OverlayInteractionView: NSView {
         let local = convert(point, from: superview)
         guard bounds.contains(local) else { return nil }
 
-        return TortoiseOverlayMetrics.isHit(point: local, in: bounds) ? self : nil
+        return TortoiseOverlayMetrics.isHit(point: local, in: bounds, scene: hitTestScene?()) ? self : nil
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -100,13 +103,15 @@ final class OverlayWindowController: NSObject, NSWindowDelegate {
     private let panel: TortoiseOverlayPanel
     private let interactionView: OverlayInteractionView
     private let engine: PomodoroEngine
+    private let animator: TortoiseAnimator
     private var cancellables = Set<AnyCancellable>()
 
     private static let originKey = "tomodoro.overlay.origin"
     private static let visibilityKey = "tomodoro.overlay.visibility"
 
     private let cellSize = TortoiseOverlayMetrics.defaultCellSize
-    private var size: NSSize { NSSize(width: cellSize * 16, height: cellSize * 16) }
+    private var size: NSSize { NSSize(width: TortoiseOverlayMetrics.width,
+                                      height: TortoiseOverlayMetrics.height) }
 
     /// Whether the overlay is allowed on screen. Persisted across launches.
     private(set) var visibility: OverlayVisibility {
@@ -141,20 +146,22 @@ final class OverlayWindowController: NSObject, NSWindowDelegate {
         visibility = visibility.settingKeepVisibleWhenIdle(keep)
     }
 
-    init(engine: PomodoroEngine) {
+    init(engine: PomodoroEngine, animator: TortoiseAnimator) {
         self.engine = engine
+        self.animator = animator
         self.visibility = Self.loadVisibility()
 
-        let side = cellSize * 16
-        let origin = Self.resolvedOrigin(saved: Self.loadSavedOrigin(), size: NSSize(width: side, height: side))
-        panel = TortoiseOverlayPanel(contentRect: NSRect(origin: origin, size: NSSize(width: side, height: side)))
+        let side = TortoiseOverlayMetrics.width
+        let height = TortoiseOverlayMetrics.height
+        let origin = Self.resolvedOrigin(saved: Self.loadSavedOrigin(), size: NSSize(width: side, height: height))
+        panel = TortoiseOverlayPanel(contentRect: NSRect(origin: origin, size: NSSize(width: side, height: height)))
         interactionView = OverlayInteractionView(
-            frame: NSRect(x: 0, y: 0, width: side, height: side)
+            frame: NSRect(x: 0, y: 0, width: side, height: height)
         )
 
         super.init()
 
-        let hosting = NSHostingController(rootView: TortoiseOverlayView(engine: engine))
+        let hosting = NSHostingController(rootView: TortoiseOverlayView(engine: engine, animator: animator))
         // Never let SwiftUI's intrinsic size drive the window: that is what pushes
         // a bottom-anchored panel off the top of the screen.
         hosting.sizingOptions = []
@@ -163,13 +170,20 @@ final class OverlayWindowController: NSObject, NSWindowDelegate {
         hosting.view.frame = interactionView.bounds
         hosting.view.autoresizingMask = [.width, .height]
 
+        // Hit testing is pixel-accurate against the same scene the overlay draws,
+        // so a click on a leaf he is eating still counts as a click on the timer.
+        interactionView.hitTestScene = { [weak animator] in
+            guard let animator else { return nil }
+            return TortoiseScene(frame: animator.frame)
+        }
+
         interactionView.onClick = { [weak self] in self?.engine.toggle() }
         interactionView.onRightClick = { [weak self] event in
             self?.showContextMenu(event: event)
         }
 
         panel.contentView = interactionView
-        panel.setContentSize(NSSize(width: side, height: side))
+        panel.setContentSize(NSSize(width: side, height: height))
         panel.delegate = self
         panel.ignoresMouseEvents = false
 
@@ -182,7 +196,11 @@ final class OverlayWindowController: NSObject, NSWindowDelegate {
         // not before it. Covers running, pausing, resetting and phase changes.
         engine.objectWillChange
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in self?.updateVisibility() }
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.animator.update(from: self.engine)
+                self.updateVisibility()
+            }
             .store(in: &cancellables)
     }
 

@@ -76,6 +76,13 @@ final class PomodoroEngine: ObservableObject {
     /// Total focus sessions completed since the counter was last cleared.
     @Published private(set) var totalFocusSessions = 0
 
+    /// How many dandelions he has eaten: one for every focus session that ran to
+    /// completion. This is the app's currency, so it is banked in the engine
+    /// rather than fired off the animation — a session that ends while the app is
+    /// asleep or closed still earns its dandelion — and it survives
+    /// `resetAll()`, which resets the schedule rather than the earnings.
+    @Published private(set) var dandelionsEaten = 0
+
     @Published var settings: PomodoroSettings {
         didSet {
             guard settings != oldValue else { return }
@@ -188,6 +195,7 @@ final class PomodoroEngine: ObservableObject {
     }
 
     /// Clears the whole cycle: back to a fresh Focus session, counters zeroed.
+    /// The dandelions he has eaten are not part of the cycle and are kept.
     func resetAll() {
         stopTicking()
         isRunning = false
@@ -328,6 +336,9 @@ final class PomodoroEngine: ObservableObject {
             if countingCompletion {
                 completedFocusSessions += 1
                 totalFocusSessions += 1
+                // The treat is for the work: a focus session that finished earns
+                // the dandelion, a break or a skip earns nothing.
+                dandelionsEaten += 1
             }
             let cycle = max(1, settings.sessionsUntilLongBreak)
             // Honours the cadence: a long break lands after every Nth focus session.
@@ -360,6 +371,38 @@ final class PomodoroEngine: ObservableObject {
         var pausedRemaining: TimeInterval
         var completedFocusSessions: Int
         var totalFocusSessions: Int
+        /// Earned by finishing focus sessions, so it survives a relaunch.
+        var dandelionsEaten: Int = 0
+
+        /// Written down rather than synthesised: declaring `init(from:)` below
+        /// removes the compiler's memberwise initialiser.
+        init(phase: SessionPhase, isRunning: Bool, endDate: Date?, pausedRemaining: TimeInterval,
+             completedFocusSessions: Int, totalFocusSessions: Int, dandelionsEaten: Int) {
+            self.phase = phase
+            self.isRunning = isRunning
+            self.endDate = endDate
+            self.pausedRemaining = pausedRemaining
+            self.completedFocusSessions = completedFocusSessions
+            self.totalFocusSessions = totalFocusSessions
+            self.dandelionsEaten = dandelionsEaten
+        }
+
+        /// Decoded field by field, like the settings. `dandelionsEaten` was added
+        /// after the first release: a blob written before it existed must still
+        /// load, or a running session would lose its schedule on upgrade. An
+        /// older blob's lifetime focus sessions are the dandelions he has already
+        /// eaten, so the total is seeded from them rather than reset to zero.
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            phase = try container.decode(SessionPhase.self, forKey: .phase)
+            isRunning = try container.decode(Bool.self, forKey: .isRunning)
+            endDate = try container.decodeIfPresent(Date.self, forKey: .endDate)
+            pausedRemaining = try container.decode(TimeInterval.self, forKey: .pausedRemaining)
+            completedFocusSessions = try container.decode(Int.self, forKey: .completedFocusSessions)
+            totalFocusSessions = try container.decode(Int.self, forKey: .totalFocusSessions)
+            dandelionsEaten = try container.decodeIfPresent(Int.self, forKey: .dandelionsEaten)
+                ?? totalFocusSessions
+        }
     }
 
     private static let settingsKey = "tomodoro.settings.v1"
@@ -380,7 +423,8 @@ final class PomodoroEngine: ObservableObject {
             phase: phase, isRunning: isRunning, endDate: endDate,
             pausedRemaining: pausedRemaining,
             completedFocusSessions: completedFocusSessions,
-            totalFocusSessions: totalFocusSessions
+            totalFocusSessions: totalFocusSessions,
+            dandelionsEaten: dandelionsEaten
         )
         if let data = try? JSONEncoder().encode(state) {
             defaults.set(data, forKey: Self.stateKey)
@@ -397,6 +441,7 @@ final class PomodoroEngine: ObservableObject {
         phase = state.phase
         completedFocusSessions = state.completedFocusSessions
         totalFocusSessions = state.totalFocusSessions
+        dandelionsEaten = state.dandelionsEaten
         pausedRemaining = state.pausedRemaining
         endDate = state.endDate
         isRunning = state.isRunning && state.endDate != nil

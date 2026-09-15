@@ -7,11 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		066EB3E6129DE40074993A12 /* AnimationSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B630E5E1B70E8ACA9A4E4EC9 /* AnimationSheetTests.swift */; };
 		06B58B6112FCD9B87FE9216C /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32703AEC9E57E5A9631C4CC9 /* HotKeyManager.swift */; };
 		16E064C71B93D9FA5E09C6B4 /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4440F2428855F63711150A59 /* StatusItemController.swift */; };
+		184B8686EDDA5E00BCB02185 /* TortoiseAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E762FF1A7126DADBC7C35013 /* TortoiseAnimatorTests.swift */; };
+		1F3080BECB450B67786ABCE7 /* AnimationSheetRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16D282BE9DA1731CEB858D7 /* AnimationSheetRenderer.swift */; };
 		22710D62E359E4FC42B7DC8C /* BannerRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1C81E7DB6EDDF9CEE8B025 /* BannerRenderer.swift */; };
 		22712704CD2EA03027EA5AF7 /* TortoiseSpriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83F3E0404BDFCA738749A3E /* TortoiseSpriteTests.swift */; };
 		2EA5FB94B52CFB9FF52B41C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B31E8A0A38AF8885A661C2 /* AppDelegate.swift */; };
+		2F9758B3F3D60DBDEEEE7049 /* TortoiseScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762C3105DB212B1975A543 /* TortoiseScene.swift */; };
+		31835B9702E581BF37D0FFB5 /* AnimationSheetRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16D282BE9DA1731CEB858D7 /* AnimationSheetRenderer.swift */; };
 		3D7F28D5AFEB1C1EB8C7FCAA /* PomodoroEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD75E91B22A9F3631B2254 /* PomodoroEngine.swift */; };
 		3F546715FAC1E7CD71CA4B69 /* OverlayGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6CEAB7EDB6CBB4F1C62108 /* OverlayGeometryTests.swift */; };
 		476CD991B262A8208F5794C8 /* OverlayVisibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163526D103A9595A9F7103A1 /* OverlayVisibilityTests.swift */; };
@@ -27,8 +32,13 @@
 		6F430C5D89F5640CAA09C559 /* TortoiseImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB992DC234E4C9BE5FD58A88 /* TortoiseImage.swift */; };
 		7197C7B31AD94E7939C69F86 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2817957BDB3A1B0BAC648229 /* Theme.swift */; };
 		81C16952ACA48C1CB184B8B7 /* OverlayVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0101A105FBBBFF39831D101A /* OverlayVisibility.swift */; };
+		84FA44731813521A20F58102 /* TortoiseAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BF37A817526AB0F759742C /* TortoiseAnimator.swift */; };
+		86BF05B206B3597781FDE212 /* TortoisePose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8892C1CF1E5FCAA9B75EBF /* TortoisePose.swift */; };
 		97ADC678A4A8BFDB459E7FE9 /* TortoiseRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5D684E1108D55E5EB44E2F /* TortoiseRenderingTests.swift */; };
+		981DC5CC62E2A18D044F6146 /* TortoiseScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17762C3105DB212B1975A543 /* TortoiseScene.swift */; };
+		ABF38B8510281127C0F03F49 /* TortoisePose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8892C1CF1E5FCAA9B75EBF /* TortoisePose.swift */; };
 		AC4357F49CE1AF47312916BA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2292D6F8F11191262E39B2 /* main.swift */; };
+		C1BA717ED7B4EAEA27AF9036 /* TortoiseAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BF37A817526AB0F759742C /* TortoiseAnimator.swift */; };
 		C4ECF07E308F0A4BF81ADB2D /* AppIconRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318EA5833BE205A94B2D1A7C /* AppIconRenderer.swift */; };
 		C6497D469921026E69580886 /* PomodoroEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD75E91B22A9F3631B2254 /* PomodoroEngine.swift */; };
 		C6CDCC99D83FCCB5E55153FF /* PomodoroEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54DE9F15ED84A16AC8F3B757 /* PomodoroEngineTests.swift */; };
@@ -45,6 +55,7 @@
 /* Begin PBXFileReference section */
 		0101A105FBBBFF39831D101A /* OverlayVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVisibility.swift; sourceTree = "<group>"; };
 		163526D103A9595A9F7103A1 /* OverlayVisibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVisibilityTests.swift; sourceTree = "<group>"; };
+		17762C3105DB212B1975A543 /* TortoiseScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseScene.swift; sourceTree = "<group>"; };
 		1819DB4F658D2805AF4B3917 /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
 		27B31E8A0A38AF8885A661C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2817957BDB3A1B0BAC648229 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -53,13 +64,16 @@
 		3BEF616852BACF1EADB13AD5 /* Diagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostics.swift; sourceTree = "<group>"; };
 		4440F2428855F63711150A59 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 		4C1C81E7DB6EDDF9CEE8B025 /* BannerRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerRenderer.swift; sourceTree = "<group>"; };
+		4F8892C1CF1E5FCAA9B75EBF /* TortoisePose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoisePose.swift; sourceTree = "<group>"; };
 		54DE9F15ED84A16AC8F3B757 /* PomodoroEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroEngineTests.swift; sourceTree = "<group>"; };
 		5A6CEAB7EDB6CBB4F1C62108 /* OverlayGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayGeometryTests.swift; sourceTree = "<group>"; };
 		61038863D239B3B5D5A3219C /* PixelFontTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelFontTests.swift; sourceTree = "<group>"; };
 		7C57D59AF43C4C6B09F8D842 /* TomodoroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TomodoroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B1233E1F2E7F942A946375 /* OverlayGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayGeometry.swift; sourceTree = "<group>"; };
 		9D15A31978DEB375601E50C8 /* PNGDecoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PNGDecoding.swift; sourceTree = "<group>"; };
+		B16D282BE9DA1731CEB858D7 /* AnimationSheetRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSheetRenderer.swift; sourceTree = "<group>"; };
 		B1F12E299B1C93E66E2E293C /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		B630E5E1B70E8ACA9A4E4EC9 /* AnimationSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationSheetTests.swift; sourceTree = "<group>"; };
 		B9FD75E91B22A9F3631B2254 /* PomodoroEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroEngine.swift; sourceTree = "<group>"; };
 		BC616CA010E73AA5BF33FDFC /* TortoiseSprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseSprite.swift; sourceTree = "<group>"; };
 		BEDF7405B857BC7E424A7FB3 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -67,9 +81,11 @@
 		C3F2DF2D7F5E4A5D4F5C5E02 /* PixelFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelFont.swift; sourceTree = "<group>"; };
 		C83F3E0404BDFCA738749A3E /* TortoiseSpriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseSpriteTests.swift; sourceTree = "<group>"; };
 		CB992DC234E4C9BE5FD58A88 /* TortoiseImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseImage.swift; sourceTree = "<group>"; };
+		D4BF37A817526AB0F759742C /* TortoiseAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseAnimator.swift; sourceTree = "<group>"; };
 		DB5D684E1108D55E5EB44E2F /* TortoiseRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseRenderingTests.swift; sourceTree = "<group>"; };
 		DECAECC4BCB78849E2088ED8 /* BannerRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerRendererTests.swift; sourceTree = "<group>"; };
 		E2CD19F58EA035CA2F4C62F9 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		E762FF1A7126DADBC7C35013 /* TortoiseAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TortoiseAnimatorTests.swift; sourceTree = "<group>"; };
 		F15EA110931163432125923D /* Tomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2292D6F8F11191262E39B2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +116,9 @@
 				0101A105FBBBFF39831D101A /* OverlayVisibility.swift */,
 				C3F2DF2D7F5E4A5D4F5C5E02 /* PixelFont.swift */,
 				B9FD75E91B22A9F3631B2254 /* PomodoroEngine.swift */,
+				D4BF37A817526AB0F759742C /* TortoiseAnimator.swift */,
+				4F8892C1CF1E5FCAA9B75EBF /* TortoisePose.swift */,
+				17762C3105DB212B1975A543 /* TortoiseScene.swift */,
 				BC616CA010E73AA5BF33FDFC /* TortoiseSprite.swift */,
 			);
 			path = Core;
@@ -127,12 +146,14 @@
 		CA1C2D0CB7ED6775A876D760 /* TomodoroTests */ = {
 			isa = PBXGroup;
 			children = (
+				B630E5E1B70E8ACA9A4E4EC9 /* AnimationSheetTests.swift */,
 				DECAECC4BCB78849E2088ED8 /* BannerRendererTests.swift */,
 				5A6CEAB7EDB6CBB4F1C62108 /* OverlayGeometryTests.swift */,
 				163526D103A9595A9F7103A1 /* OverlayVisibilityTests.swift */,
 				61038863D239B3B5D5A3219C /* PixelFontTests.swift */,
 				9D15A31978DEB375601E50C8 /* PNGDecoding.swift */,
 				54DE9F15ED84A16AC8F3B757 /* PomodoroEngineTests.swift */,
+				E762FF1A7126DADBC7C35013 /* TortoiseAnimatorTests.swift */,
 				DB5D684E1108D55E5EB44E2F /* TortoiseRenderingTests.swift */,
 				C83F3E0404BDFCA738749A3E /* TortoiseSpriteTests.swift */,
 			);
@@ -152,6 +173,7 @@
 		EC0671849814362E80CCC3D1 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				B16D282BE9DA1731CEB858D7 /* AnimationSheetRenderer.swift */,
 				27B31E8A0A38AF8885A661C2 /* AppDelegate.swift */,
 				318EA5833BE205A94B2D1A7C /* AppIconRenderer.swift */,
 				4C1C81E7DB6EDDF9CEE8B025 /* BannerRenderer.swift */,
@@ -273,6 +295,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31835B9702E581BF37D0FFB5 /* AnimationSheetRenderer.swift in Sources */,
 				2EA5FB94B52CFB9FF52B41C3 /* AppDelegate.swift in Sources */,
 				C4ECF07E308F0A4BF81ADB2D /* AppIconRenderer.swift in Sources */,
 				22710D62E359E4FC42B7DC8C /* BannerRenderer.swift in Sources */,
@@ -287,8 +310,11 @@
 				57E16C5634DBF5AA6C2DC2DD /* PopoverView.swift in Sources */,
 				16E064C71B93D9FA5E09C6B4 /* StatusItemController.swift in Sources */,
 				7197C7B31AD94E7939C69F86 /* Theme.swift in Sources */,
+				84FA44731813521A20F58102 /* TortoiseAnimator.swift in Sources */,
 				6F430C5D89F5640CAA09C559 /* TortoiseImage.swift in Sources */,
 				E575FAADC08D8DBBA69001D7 /* TortoiseOverlayView.swift in Sources */,
+				86BF05B206B3597781FDE212 /* TortoisePose.swift in Sources */,
+				2F9758B3F3D60DBDEEEE7049 /* TortoiseScene.swift in Sources */,
 				FAFC033089C91609CDE0DF32 /* TortoiseSprite.swift in Sources */,
 				AC4357F49CE1AF47312916BA /* main.swift in Sources */,
 			);
@@ -298,6 +324,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3080BECB450B67786ABCE7 /* AnimationSheetRenderer.swift in Sources */,
+				066EB3E6129DE40074993A12 /* AnimationSheetTests.swift in Sources */,
 				D9B6FD350BD5D0913F7E12C1 /* BannerRenderer.swift in Sources */,
 				4809EF246BD8C2C4BC61B7FD /* BannerRendererTests.swift in Sources */,
 				6B3E79ADAAFCCD38316B79D3 /* OverlayGeometry.swift in Sources */,
@@ -309,8 +337,12 @@
 				E60F0B1862A824206E903665 /* PixelFontTests.swift in Sources */,
 				C6497D469921026E69580886 /* PomodoroEngine.swift in Sources */,
 				C6CDCC99D83FCCB5E55153FF /* PomodoroEngineTests.swift in Sources */,
+				C1BA717ED7B4EAEA27AF9036 /* TortoiseAnimator.swift in Sources */,
+				184B8686EDDA5E00BCB02185 /* TortoiseAnimatorTests.swift in Sources */,
 				508BF0D35E65CFD67E4BCA80 /* TortoiseImage.swift in Sources */,
+				ABF38B8510281127C0F03F49 /* TortoisePose.swift in Sources */,
 				97ADC678A4A8BFDB459E7FE9 /* TortoiseRenderingTests.swift in Sources */,
+				981DC5CC62E2A18D044F6146 /* TortoiseScene.swift in Sources */,
 				CDB89F8810386586727505CB /* TortoiseSprite.swift in Sources */,
 				22712704CD2EA03027EA5AF7 /* TortoiseSpriteTests.swift in Sources */,
 			);

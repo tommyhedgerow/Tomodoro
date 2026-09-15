@@ -204,13 +204,34 @@ struct PixelCanvas {
         }
     }
 
-    /// One sprite pixel per point, scaled.
+    /// One sprite pixel per point, scaled, drawn in the resting pose.
+    ///
+    /// Deliberately not routed through `scene`: a still tortoise is drawn at the
+    /// caller's origin, not at his place in the taller animated scene. Sharing the
+    /// code would silently shift every icon and banner down by the headroom.
     mutating func sprite(_ palette: TortoisePalette, atX x: CGFloat, atY y: CGFloat, cell: CGFloat) {
         for gy in 0..<TortoiseSprite.size {
             for gx in 0..<TortoiseSprite.size {
                 guard let color = palette.color(for: TortoiseSprite.cell(x: gx, y: gy)) else { continue }
                 rect(x: x + CGFloat(gx) * cell, y: y + CGFloat(gy) * cell,
                      width: cell, height: cell, color: color)
+            }
+        }
+    }
+
+    /// A whole animated frame: the tortoise in his current pose plus any prop in
+    /// front of him. Props carry their own alpha so they can fade.
+    mutating func scene(
+        _ scene: TortoiseScene, palette: TortoisePalette,
+        atX x: CGFloat = 0, atY y: CGFloat = 0, cell: CGFloat
+    ) {
+        for gy in 0..<TortoiseScene.height {
+            for gx in 0..<TortoiseScene.width {
+                guard let (cellType, alpha) = scene.cell(x: gx, y: gy) else { continue }
+                guard let color = palette.color(for: cellType) else { continue }
+                rect(x: x + CGFloat(gx) * cell, y: y + CGFloat(gy) * cell,
+                     width: cell, height: cell,
+                     color: alpha >= 1 ? color : color.withAlpha(alpha))
             }
         }
     }

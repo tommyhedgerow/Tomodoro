@@ -96,15 +96,18 @@ final class TortoiseRenderingTests: XCTestCase {
 
         let inkedRows = (0..<16).filter { y in decoded.rows[y].contains { $0.a > 0 } }
         XCTAssertEqual(inkedRows.first, 1, "the shell top should be the first inked row")
-        XCTAssertEqual(inkedRows.last, 14, "the feet should be the last inked row")
+        XCTAssertEqual(inkedRows.last, 13, "the feet should be the last inked row")
 
         // Row 1 is the crown of the shell: four pixels in the middle.
         let topColumns = (0..<16).filter { decoded.rows[1][$0].a > 0 }
         XCTAssertEqual(topColumns, [4, 5, 6, 7], "top row shape is wrong; image may be flipped")
 
-        // Row 14 is the feet: two separate groups.
-        let footColumns = (0..<16).filter { decoded.rows[14][$0].a > 0 }
+        // Row 13 is the feet: two separate groups, on the flared last row of
+        // the legs, which is the row below the straight part of each leg.
+        let footColumns = (0..<16).filter { decoded.rows[13][$0].a > 0 }
         XCTAssertEqual(footColumns, [2, 3, 4, 7, 8, 9])
+        let legColumns = (0..<16).filter { decoded.rows[12][$0].a > 0 }
+        XCTAssertEqual(legColumns, [3, 4, 7, 8], "one straight row above the feet")
     }
 
     func testImageIsNotHorizontallyMirrored() throws {

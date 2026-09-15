@@ -51,6 +51,7 @@ struct PopoverView: View {
                 header
                 PhaseProgressBar(progress: engine.progress, color: phaseColor)
                 cycleRow
+                dandelionRow
                 controls
                 Divider()
                 phasePicker
@@ -114,6 +115,32 @@ struct PopoverView: View {
         let base = n == 1 ? "Long break after the next focus session"
                           : "\(n) focus sessions until a long break"
         return engine.totalFocusSessions > 0 ? base + "  ·  \(engine.totalFocusSessions) total" : base
+    }
+
+    /// The dandelions he has eaten: one per focus session that finished. It is
+    /// the app's currency, so it is shown as a running total of its own rather
+    /// than as a detail of the current session.
+    private var dandelionRow: some View {
+        HStack(spacing: 10) {
+            DandelionBadge(pointSize: 3)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("\(engine.dandelionsEaten)")
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .monospacedDigit()
+                Text(engine.dandelionsEaten == 1 ? "dandelion eaten" : "dandelions eaten")
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 8).fill(Color.primary.opacity(0.05))
+        )
+        .help("He eats a dandelion every time a focus session finishes. "
+              + "Dandelions are his currency.")
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: Controls

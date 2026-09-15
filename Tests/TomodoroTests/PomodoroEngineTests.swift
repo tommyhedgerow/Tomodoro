@@ -244,4 +244,89 @@ final class PomodoroEngineTests: XCTestCase {
         engine.select(phase: .focus)
         XCTAssertEqual(engine.sessionsUntilLongBreak, 4)
     }
+
+    // MARK: Dandelions, the currency
+
+    /// One dandelion per focus session that ran to completion.
+    func testDandelionsAreEarnedByFinishingFocusSessions() {
+        let (engine, clock) = makeEngine(#function)
+        XCTAssertEqual(engine.dandelionsEaten, 0, "a fresh install has eaten nothing")
+
+        engine.start()
+        clock.advance(minutes: 25.5)
+        engine.refresh()
+        XCTAssertEqual(engine.dandelionsEaten, 1)
+
+        // The break he is on now is rest, not work, and earns nothing.
+        clock.advance(minutes: 5.5)
+        engine.refresh()
+        XCTAssertEqual(engine.dandelionsEaten, 1, "a break is not a treat")
+
+        clock.advance(minutes: 25.5)
+        engine.refresh()
+        XCTAssertEqual(engine.dandelionsEaten, 2, "the second focus session earns the second")
+    }
+
+    /// Sessions that elapsed while the machine slept were still finished, so he
+    /// is owed their dandelions too.
+    func testEverySessionFinishedDuringASleepIsBanked() {
+        let (engine, clock) = makeEngine(#function)
+        engine.start()                       // 25 focus + 5 break + 25 focus
+        clock.advance(minutes: 55.5)
+        engine.refresh()
+
+        XCTAssertEqual(engine.completedFocusSessions, 2)
+        XCTAssertEqual(engine.dandelionsEaten, 2)
+    }
+
+    func testSkippingAFocusSessionEarnsNothing() {
+        let (engine, _) = makeEngine(#function)
+        engine.skip()
+        XCTAssertEqual(engine.dandelionsEaten, 0)
+    }
+
+    func testDandelionsSurviveARelaunch() {
+        let clock = FakeClock()
+        let suite = "tomodoro.tests.dandelions"
+        UserDefaults(suiteName: suite)!.removePersistentDomain(forName: suite)
+        let defaults = UserDefaults(suiteName: suite)!
+
+        let first = PomodoroEngine(defaults: defaults) { [weak clock] in clock?.current ?? Date() }
+        first.start()
+        clock.advance(minutes: 25.5)
+        first.refresh()
+        XCTAssertEqual(first.dandelionsEaten, 1)
+
+        let second = PomodoroEngine(defaults: defaults) { [weak clock] in clock?.current ?? Date() }
+        XCTAssertEqual(second.dandelionsEaten, 1, "the currency is kept across launches")
+    }
+
+    /// Clearing the cycle is a change of schedule, not a spend.
+    func testResetAllKeepsTheDandelions() {
+        let (engine, clock) = makeEngine(#function)
+        engine.start()
+        clock.advance(minutes: 25.5)
+        engine.refresh()
+        engine.resetAll()
+
+        XCTAssertEqual(engine.totalFocusSessions, 0)
+        XCTAssertEqual(engine.dandelionsEaten, 1, "resetting the cycle must not clear the currency")
+    }
+
+    /// A state blob written before the currency existed must still load — losing
+    /// it would throw away a running session's schedule on upgrade — and the
+    /// focus sessions already in it are the dandelions he has already eaten.
+    func testALegacyStateBlobSeedsTheDandelionTotal() throws {
+        let suite = "tomodoro.tests.legacycurrency"
+        UserDefaults(suiteName: suite)!.removePersistentDomain(forName: suite)
+        let defaults = UserDefaults(suiteName: suite)!
+        let legacy = "{\"phase\":\"focus\",\"isRunning\":false,\"pausedRemaining\":1500,"
+            + "\"completedFocusSessions\":2,\"totalFocusSessions\":7}"
+        defaults.set(Data(legacy.utf8), forKey: "tomodoro.state.v1")
+
+        let engine = PomodoroEngine(defaults: defaults)
+        XCTAssertEqual(engine.totalFocusSessions, 7)
+        XCTAssertEqual(engine.dandelionsEaten, 7,
+                       "the upgrade starts from what he has already eaten")
+    }
 }

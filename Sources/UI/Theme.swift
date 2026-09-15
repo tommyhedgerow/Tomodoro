@@ -67,6 +67,42 @@ struct PhaseProgressBar: View {
     }
 }
 
+/// A single dandelion, drawn from the same plant pixels the overlay grows at his
+/// mouth, for the currency row in the dropdown.
+///
+/// Only the flower head and the top of the stalk are drawn: the whole plant is
+/// sixteen cells tall, which is a column rather than a badge. Foliage colours are
+/// deliberately independent of the phase and the tortoise style, so one palette
+/// serves every session.
+struct DandelionBadge: View {
+    var pointSize: CGFloat = 3
+
+    private static let art: [(x: Int, y: Int, cell: TortoiseCell)] =
+        TortoisePlant.flower + TortoisePlant.stalk.filter { $0.y <= 6 }
+    private static let minX = art.map(\.x).min() ?? 0
+    private static let minY = art.map(\.y).min() ?? 0
+    private static let columns = (art.map(\.x).max() ?? 0) - minX + 1
+    private static let rows = (art.map(\.y).max() ?? 0) - minY + 1
+
+    var body: some View {
+        Canvas { context, _ in
+            let palette = TortoisePalette.make(style: .natural, phase: .focus)
+            for cell in Self.art {
+                guard let colour = palette.color(for: cell.cell) else { continue }
+                let rect = CGRect(
+                    x: CGFloat(cell.x - Self.minX) * pointSize,
+                    y: CGFloat(cell.y - Self.minY) * pointSize,
+                    width: pointSize, height: pointSize
+                )
+                context.fill(Path(rect), with: .color(Color(colour)))
+            }
+        }
+        .frame(width: CGFloat(Self.columns) * pointSize,
+               height: CGFloat(Self.rows) * pointSize)
+        .accessibilityHidden(true)
+    }
+}
+
 /// One dot per focus session in the current cycle.
 struct SessionDots: View {
     let completedInCycle: Int
